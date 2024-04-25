@@ -11,7 +11,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import userapp.exception.FromToRangeException;
+import userapp.exception.FromIsBeforeToException;
 import userapp.exception.UserNotFoundException;
 import userapp.model.User;
 
@@ -139,7 +139,7 @@ public class UserServiceImpl {
                     result.add(user);
                 }
             } else {
-                throw new FromToRangeException("From must be before to!");
+                throw new FromIsBeforeToException("From must be before to!");
             }
         }
         return result;
