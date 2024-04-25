@@ -120,6 +120,7 @@ public class UserServiceImpl {
                 userFullUpdate.setLastName(user.getLastName());
                 userFullUpdate.setBirthDate(user.getBirthDate());
                 userFullUpdate.setAddress(user.getAddress());
+                userFullUpdate.setPhoneNumber(user.getPhoneNumber());
                 users.put(userFullUpdate.getId(), userFullUpdate);
                 return userFullUpdate;
             } else {
