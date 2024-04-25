@@ -5,11 +5,13 @@ This API provides endpoints for managing user data.
 Endpoints
 
 **GET /api/users/all**
+
 Description: Retrieve all users.
 Response: List of all users.
 HTTP Status Code: 200 OK
 
 **POST /api/users/create**
+
 Description: Create a new user.
 Request Body: User object.
 
