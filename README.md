@@ -1,3 +1,5 @@
+# test-task-for-clear-solutions
+
 **User Management API**
 
 This API provides endpoints for managing user data.
@@ -136,3 +138,6 @@ No need to use @RequestBody
 
 No need to use @RequestBody
 
+=======
+# test-task-for-clear-solutions
+>>>>>>> fea75413ea36c1ce78f49c09eba007a696c5995a
