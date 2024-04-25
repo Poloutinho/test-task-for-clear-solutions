@@ -84,7 +84,7 @@ No need to use @RequestBody
 Example request to create a new user:
 
 Request Body:
-
+```json
 {
     "id": 1,
     "email": "user665@example.com",
@@ -94,7 +94,7 @@ Request Body:
     "address": "123 Main St",
     "phoneNumber": "+12345678"
 }
-
+```
 **PUT /api/users/update/{userId}**
 
 {userId} : userId is @PathVariable that indicates user to be updated
@@ -102,18 +102,18 @@ Request Body:
 Example request to update user by one/some field/fields:
 
 Request Body:
-
+```json
 {
     "lastName": "Bobson"
 }
-
+```
 **PUT /api/users/updateAllFields/{userId}**
 {userId} : userId is @PathVariable that indicates user to be updated
 
 Example request to update user by all field:
 
 Request Body: 
-
+```json
 {
     "id": 1,
     "email": "user444@example.com",
@@ -123,7 +123,7 @@ Request Body:
     "address": "555 Main Street",
     "phoneNumber": "+987654321"
 }
-
+```
 **GET /api/users/getInRange?from=1989-04-01&to=1999-04-30**
 
 from=1989-04-01&to=1999-04-30 : parameters that indicate the range in which we are looking for users with the corresponding date of birth

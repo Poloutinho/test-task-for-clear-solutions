@@ -1,16 +1,18 @@
 package userapp;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static userapp.service.UserServiceImpl.users;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Date;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,22 +25,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import userapp.model.User;
 import org.testcontainers.shaded.org.apache.commons.lang3.builder.EqualsBuilder;
-
-import java.util.Date;
+import userapp.model.User;
+import userapp.service.UserServiceImpl;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class UserControllerTest {
+
+    private static Map<Long, User> users = UserServiceImpl.getUsers();
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
-
-
 
     @BeforeEach
     void setUp() {
@@ -55,7 +56,7 @@ public class UserControllerTest {
     @Test
     @DisplayName("Get all users")
     public void testGetAllUsers() throws Exception {
-        mockMvc.perform(get("/api/users/all"))
+        mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -76,7 +77,7 @@ public class UserControllerTest {
 
         String jsonRequest = objectMapper.writeValueAsString(user);
 
-        MvcResult mvcResult = mockMvc.perform(post("/api/users/create")
+        MvcResult mvcResult = mockMvc.perform(post("/api/users")
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -102,16 +103,16 @@ public class UserControllerTest {
     void updateUserAllFields_ValidId_Success() throws Exception {
         Long userId = 1L;
 
-        User user = users.get(userId);
-
         User expected = createUser();
         expected.setId(userId);
         expected.setEmail("user777@example.com");
         expected.setFirstName("Jack");
         expected.setLastName("London");
-        expected.setBirthDate(new Date(1990-10-15));
+        expected.setBirthDate(new Date(90, 9, 15));
         expected.setAddress("999 Main Street");
         expected.setPhoneNumber("+123456789");
+
+        User user = users.get(userId);
 
         users.put(userId, user);
 
@@ -147,7 +148,7 @@ public class UserControllerTest {
 
         String jsonRequest = objectMapper.writeValueAsString(user);
 
-        MvcResult mvcResult = mockMvc.perform(put("/api/users/update/{userId}", user.getId())
+        MvcResult mvcResult = mockMvc.perform(patch("/api/users/update/{userId}", user.getId())
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -173,9 +174,7 @@ public class UserControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(1)));
-        }
-
-
+    }
 
     private User createUser() {
         User user = new User();

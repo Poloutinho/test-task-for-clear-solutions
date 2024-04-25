@@ -1,12 +1,5 @@
 package userapp.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import userapp.exception.FromToRangeException;
-import userapp.exception.UserNotFoundException;
-import userapp.model.User;
-
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -15,16 +8,26 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import userapp.exception.FromToRangeException;
+import userapp.exception.UserNotFoundException;
+import userapp.model.User;
 
 @Service
 public class UserServiceImpl {
 
     private static final String EMAIL_PATTERN = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
-    public static Map<Long, User> users = new HashMap<>();
+    private static final int OLD_ENOUGH = 18;
+    private static final Long INCREMENT_SIZE = 1L;
+    private static Map<Long, User> users = new HashMap<>();
 
-    private static Long index = 0L;
+    public static Map<Long, User> getUsers() {
+        return users;
+    }
 
-    public static List<User> getAllUsers () {
+    public static List<User> getAllUsers() {
         return new ArrayList<>(users.values());
     }
 
@@ -41,19 +44,21 @@ public class UserServiceImpl {
     }
 
     private long getNextUserId() {
-        return users.size() + 1L;
+        return users.size() + INCREMENT_SIZE;
     }
 
     private static boolean isUserOldEnough(Date birthDate) {
         LocalDate currentDate = LocalDate.now();
-        LocalDate birthLocalDate = birthDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate birthLocalDate = birthDate.toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDate();
         int age = Period.between(birthLocalDate, currentDate).getYears();
-        return age >= 18;
+        return age >= OLD_ENOUGH;
     }
 
-    public static User deleteUser (Long userId) {
+    public static User deleteUser(Long userId) {
         return users.remove(userId);
     }
+
     public User getUserById(Long userId) {
         User user = users.get(userId);
         return user;
@@ -62,8 +67,9 @@ public class UserServiceImpl {
     public User update(@PathVariable Long userId, @RequestBody User user) {
         User userToUpdate = getUserById(userId);
         if (userToUpdate != null) {
-            if ((user.getBirthDate() == null) || (LocalDate.now().minusYears(user.getBirthDate().getYear()).getYear()) >= 18 &&
-                    user.getEmail().matches(EMAIL_PATTERN)) {
+            if ((user.getBirthDate() == null) || (LocalDate.now()
+                    .minusYears(user.getBirthDate().getYear()).getYear()) >= 18
+                    && user.getEmail().matches(EMAIL_PATTERN)) {
                 if (user.getEmail() != null) {
                     userToUpdate.setEmail(user.getEmail());
                 }
@@ -91,10 +97,10 @@ public class UserServiceImpl {
                 if (user.getPhoneNumber() != null) {
                     userToUpdate.setPhoneNumber(user.getPhoneNumber());
                 }
+
                 users.put(userToUpdate.getId(), userToUpdate);
                 return userToUpdate;
-            }
-            else {
+            } else {
                 throw new IllegalArgumentException("Illegal argument for user");
             }
         } else {
@@ -106,8 +112,9 @@ public class UserServiceImpl {
         users.put(userId, getUserById(userId));
         User userFullUpdate = getUserById(userId);
         if (userFullUpdate != null) {
-            if ((LocalDate.now().minusYears(user.getBirthDate().getYear()).getYear()) >= 18 &&
-                    user.getEmail().matches(EMAIL_PATTERN)) {
+            if ((LocalDate.now().minusYears(user.getBirthDate().getYear())
+                    .getYear()) >= OLD_ENOUGH
+                    && user.getEmail().matches(EMAIL_PATTERN)) {
                 userFullUpdate.setEmail(user.getEmail());
                 userFullUpdate.setFirstName(user.getFirstName());
                 userFullUpdate.setLastName(user.getLastName());
