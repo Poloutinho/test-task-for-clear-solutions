@@ -137,7 +137,3 @@ No need to use @RequestBody
 {userId} : userId is @PathVariable that indicates user to be deleted
 
 No need to use @RequestBody
-
-=======
-# test-task-for-clear-solutions
->>>>>>> fea75413ea36c1ce78f49c09eba007a696c5995a
