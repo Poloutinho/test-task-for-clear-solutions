@@ -6,13 +6,13 @@ This API provides endpoints for managing user data.
 
 Endpoints
 
-**GET /api/users/all**
+**GET /api/users**
 
 Description: Retrieve all users.
 Response: List of all users.
 HTTP Status Code: 200 OK
 
-**POST /api/users/create**
+**POST /api/users**
 
 Description: Create a new user.
 Request Body: User object.
@@ -22,7 +22,7 @@ Request Body: User object.
 Response: Newly created user.
 HTTP Status Code: 200 OK
 
-**PUT /api/users/update/{userId}**
+**PATCH /api/users/update/{userId}**
 
 Description: Update an existing user.
 Path Variable: userId (ID of the user to be updated)
@@ -77,11 +77,11 @@ To use this API, you can send HTTP requests to the specified endpoints using a t
 
 Example request to retrieve all users:
 
-**GET /api/users/all**
+**GET /api/users**
 
 No need to use @RequestBody
 
-**POST /api/users/create**
+**POST /api/users**
 
 Example request to create a new user:
 
@@ -97,7 +97,7 @@ Request Body:
     "phoneNumber": "+12345678"
 }
 ```
-**PUT /api/users/update/{userId}**
+**PATCH /api/users/update/{userId}**
 
 {userId} : userId is @PathVariable that indicates user to be updated
 
